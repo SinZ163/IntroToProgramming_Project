@@ -65,3 +65,57 @@ So we will store this server_socket in a vairbale, such as `server` and we can p
 
 Then, we want to do the following logic for a long time, and since why not, have a `while (true)` loop.
 
+Inside this while loop, we will call:
+```c
+void check_network_activity()
+```
+Which is similiar to `process_events()` if you have done SwinGame Graphics and Events before, but is responsible for network IO instead.
+
+Afterwards, we can check if we have received any messages using the function:
+```c
+bool has_message_on_server(server_socket server)
+```
+Which returns 1 (true) if there is atleast one message, and returns 0 (false) if there was no messages waiting.
+
+If we have a message, we can get it using the function:
+```c
+message read_message_from_server(server_socket server)
+```
+which gets a message pointer which we can access fields using the following functions:
+```c
+void message_data(message message, char* result)
+void message_host(message message, char* result)
+short message_port(message message)
+connection message_connection(message message)
+```
+In this program, we will be using _data and _connection, but for now only _data.
+
+`message_data` requires an input char array buffer of 256,
+so we define a char[256], and feed it into `message_data()` along with our message object, and that char array now contains the message, which we can print.
+
+All this looks like is:
+```c
+#include <stdio.h>
+#include "../lib/swingame.h"
+
+int main()
+{
+    server_socket server = create_server_with_protocol("SwinServer", 25565, TCP);
+
+    while(true) {
+        check_network_activity();
+        if (has_message_on_server(server)) {
+            message newMessage = read_message_from_server(server);
+            char data[256];
+            message_data(newMessage, data);
+
+            printf(data);
+        }
+        delay(10);
+    }
+    return 0;
+}
+```
+But without a corresponding client, it won't do much, so lets fix that.
+
+## Step 3, Basic Client.
