@@ -1,0 +1,40 @@
+{
+    // See https://go.microsoft.com/fwlink/?LinkId=733558
+    // for the documentation about the tasks.json format
+    "version": "0.1.0",
+    "tasks": [
+        {
+            "taskName": "build",
+            "command": "g++",
+            "isShellCommand": true,
+            "echoCommand": true,
+            "args": [
+                "-L./lib/win32",
+                "-march=x86-64",
+                "-static-libstdc++",
+                "-static-libgcc",
+                //"-v", //Makes it look impressive
+                "-g", //Enable debugging
+                "-o",
+                "./bin/${fileBasenameNoExtension}",
+                "./lib/*.cpp",
+                "./src/*.cpp",
+                "-lsgsdl2",
+                "-lsgsdk",
+                "-lpthread" //I WANT THREADS, DEAL WITH IT.
+            ],
+            "showOutput": "always"
+        },
+        {
+            "taskName": "init",
+            "suppressTaskName": true,
+            "isBuildCommand": false,
+            "echoCommand": true,
+            "command": "cmd",
+            "args": [
+                "/C",
+                "${workspaceRoot}\\build.bat"
+            ]
+        }
+    ]
+}
