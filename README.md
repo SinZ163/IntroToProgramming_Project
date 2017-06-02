@@ -119,3 +119,32 @@ int main()
 But without a corresponding client, it won't do much, so lets fix that.
 
 ## Step 3, Basic Client.
+
+Theres a function to open a connection with a given hostname/ip and port:
+```c
+connection open_connection_named_with_protocol(char* name, char* address, short port, connection_type connectionType)
+```
+This lets us get a connection type, in the same way we had a server type in the server example.
+
+using that, we can send a message to the server using:
+```c
+    int send_message_to(char* msg, connection con)
+```
+where the output is 1 if the message was successful, and 0 if it failed.
+
+but this barebones example will make the server print 'Testing 123'
+```c
+int main() {
+    connection con = open_connection_named_with_protocol("SwinClient", "127.0.0.1", 25565, TCP);
+    send_message_to("Testing 123", con);
+
+    //Following is to keep it alive
+    char buffer[256];
+    gets(buffer);
+    return 0;
+}
+```
+
+So we have the ability to send messages from client to server fine, going further requires making swingame more stable, having threadding support and more.
+
+In this repository, is `Project_Client` and `Project_Server` where I was working on a 4x4 grid game based on /r/place. The database successfully gets transmitted from server to client, but the client promptly crashes afterwards when accessing network functions.
